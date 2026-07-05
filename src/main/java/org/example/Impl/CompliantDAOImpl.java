@@ -10,6 +10,7 @@ import java.util.List;
 
 public class CompliantDAOImpl implements ComplaintDAO {
 
+    @Override
     public void save(Compliant compliant){
         Transaction tx = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
@@ -22,6 +23,7 @@ public class CompliantDAOImpl implements ComplaintDAO {
         }
     }
 
+    @Override
     public Compliant findByCompliantId(Long compliantId){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.find(Compliant.class, compliantId);
@@ -30,6 +32,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public List<Compliant> findAllCompliants(){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant", Compliant.class).list();
@@ -38,6 +42,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public void update(Compliant compliant){
         Transaction tx = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
@@ -49,18 +55,22 @@ public class CompliantDAOImpl implements ComplaintDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
     public void delete(Long compliantId){
         Transaction tx = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             tx = session.beginTransaction();
-            session.find(Compliant.class, compliantId);
-            if(compliantId != null) session.remove(compliantId);
+            Compliant compliant = session.find(Compliant.class, compliantId);
+            if(compliant != null) session.remove(compliant);
             tx.commit();
         }catch(Exception e){
             if(tx != null) tx.rollback();
             e.printStackTrace();
         }
     }
+
+    @Override
     public List<Compliant> findByCompliantTitle(String compliantTitle){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant where compliantTitle = :compliantTitle ", Compliant.class).setParameter("compliantTitle", compliantTitle).list();
@@ -69,6 +79,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public List<Compliant> findByCompliantStatus(Compliant.CompliantStatus compliantStatus){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant where compliantStatus = :compliantStatus ", Compliant.class).setParameter("compliantStatus", compliantStatus).list();
@@ -77,6 +89,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public List<Compliant> findByResident(Long residentId){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant where resident.residentId = :residentId ", Compliant.class).setParameter("residentId", residentId).list();
@@ -85,6 +99,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public List<Compliant> findByFlat(Long flatId){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant where flats.flatId = :flatId ", Compliant.class).setParameter("flatId", flatId).list();
@@ -93,6 +109,8 @@ public class CompliantDAOImpl implements ComplaintDAO {
             return null;
         }
     }
+
+    @Override
     public List<Compliant> findByCompliantCreatedAt(LocalDateTime compliantCreatedAt){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("from Compliant where compliantCreatedAt = :compliantCreatedAt ", Compliant.class).setParameter("compliantCreatedAt", compliantCreatedAt).list();
