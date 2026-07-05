@@ -18,7 +18,6 @@ public class FlatsDAOImpl implements FlatsDAO {
                 tx = session.beginTransaction();
                 session.persist(flat);
                 tx.commit();
-                session.close();
         }catch(Exception e){
                 if(tx != null) tx.rollback();
                 e.printStackTrace();
@@ -32,7 +31,6 @@ public class FlatsDAOImpl implements FlatsDAO {
             tx = session.beginTransaction();
             session.merge(flat);
             tx.commit();
-            session.close();
         }catch(Exception e){
             if(tx != null) tx.rollback();
             e.printStackTrace();
@@ -40,14 +38,13 @@ public class FlatsDAOImpl implements FlatsDAO {
     }
 
     @Override
-    public void delete(Long id){
+    public void delete(Long flatId){
         Transaction tx = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
-            Flats flat = session.find(Flats.class, id);
+            Flats flat = session.find(Flats.class, flatId);
             tx = session.beginTransaction();
             if(flat != null) session.remove(flat);
             tx.commit();
-            session.close();
         }catch(Exception e){
             if(tx != null) tx.rollback();
             e.printStackTrace();
@@ -55,16 +52,22 @@ public class FlatsDAOImpl implements FlatsDAO {
     }
 
     @Override
-    public Flats findById(Long id){
+    public Flats findById(Long flatId){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.find(Flats.class, id);
+            return session.find(Flats.class, flatId);
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public List<Flats> findAll(){
+    public List<Flats> findAllFlats(){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from Flats", Flats.class).list();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -72,6 +75,9 @@ public class FlatsDAOImpl implements FlatsDAO {
     public List<Flats> findByFloor(int floor){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from Flats where floor = :floor", Flats.class).setParameter("floor", floor).list();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -79,13 +85,19 @@ public class FlatsDAOImpl implements FlatsDAO {
     public List<Flats> findByBlock(String block){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from Flats where block = :block", Flats.class).setParameter("block", block).list();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public List<Flats> findByStatus(Flats.FlatStatus status){
+    public List<Flats> findByStatus(Flats.FlatStatus flatStatus){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Flats where status = :status", Flats.class).setParameter("status", status).list();
+            return session.createQuery("from Flats where flatStatus = :flatStatus", Flats.class).setParameter("flatStatus", flatStatus).list();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -94,6 +106,9 @@ public class FlatsDAOImpl implements FlatsDAO {
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             Flats flat = session.createQuery("from Flats where flatNumber = :flatNumber", Flats.class).setParameter("flatNumber", flatNumber).uniqueResult();
             return flat != null ? flat.getResidents() : null;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -101,6 +116,9 @@ public class FlatsDAOImpl implements FlatsDAO {
     public Flats findByFlatNumber(String flatNumber){
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from Flats where flatNumber = :flatNumber", Flats.class).setParameter("flatNumber", flatNumber).uniqueResult();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 }
